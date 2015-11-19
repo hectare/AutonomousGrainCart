@@ -63,57 +63,28 @@ offsetAhead = 18.0
 offsetLeft = 9.5
 altitude = 30  # in meters
 
+"""
+Controls rc8 hooked to speed control lever in grain cart
 
-def setSpeed(a):
-    # function for controlling rc8 hooked to speed control lever
-    v.channel_override = {8: a}
+0 - Control returned to Remote
+1000 - SLOW
+1202 - 2km/hr
+etc..
+1704 - 7km/hr
+2000 - MAX
+"""
+def setSpeed(speed):
+
+    speeds = {1000:'SLOW', 1202:2, 1283:3, 1358:4, 1489:5, 1570:6, 1704:7, 2000:'MAX!'}
+
+    v.channel_override = {8: speed}
     v.flush()
-
-
-# ~ print "sent servo 8 to ", a
-def speedReturn():
-    setSpeed(0)
-    print "Control Returned to Remote"
-
-
-def speedSlow():
-    setSpeed(1000)
-    print "set speed to slow \n"
-
-
-def speed2():
-    setSpeed(1202)
-    print "set speed to 2km/hr \n"
-
-
-def speed3():
-    setSpeed(1283)
-    print "set speed to 3km/hr \n"
-
-
-def speed4():
-    setSpeed(1358)
-    print "set speed to 4km/hr \n"
-
-
-def speed5():
-    setSpeed(1489)
-    print "set speed to 5km/hr \n"
-
-
-def speed6():
-    setSpeed(1570)
-    print "set speed to 6km/hr \n"
-
-
-def speed7():
-    setSpeed(1704)
-    print "set speed to 7km/hr \n"
-
-
-def speedMax():
-    setSpeed(2000)
-    print "set speed max \n"
+    if speed == 0:
+        print "Control returned to Remote!"
+    elif speed == 1000 or 2000:
+        print "Set speed to %s" % speeds[speed]
+    else:
+        print "Set speed to %skm/hr" % speeds[speed]
 
 
 nudge = 0.0
@@ -160,7 +131,7 @@ def turnAround():
     global nudge
     print "CART IS TURNING AROUND!"
     print "CART IS MOVING CLOSER! \n"
-    speed4()
+    setSpeed(1358)
     nudge = 0.0  # this should ensure cart always turns to the right
     setPointForward()
 
@@ -279,7 +250,8 @@ def emergencyStop():
             print "Vehicle was not stopped!"
             print "Trying Again! \n"
     print "Vehicle Stopped \n"
-    speedSlow()
+    #slow
+    setSpeed(1000)
     homeScreen()
 
 
@@ -289,7 +261,8 @@ def controlledStop():
     sendcartTimer = 0
     pygame.time.set_timer(sendcart_event, sendcartTimer)
     while v.mode.name != "HOLD":
-        speedSlow()
+        #slow
+        setSpeed(1000)
         time.sleep(1)
         v.mode = VehicleMode("HOLD")
         v.flush()
@@ -371,15 +344,15 @@ def homeScreen():
                 if approach[0] != 0:
                     button("Go To Approach", 440, 280, 380, 380, purple, grey, goingToApproach)
                 button("Approach is HERE", 20, 280, 380, 380, greyblue, grey, ApproachLoc)
-                button("Remote", 830, 20, 180, 140, green, grey, speedReturn)
-                button("SLOW", 830, 170, 180, 140, green, grey, speedSlow)
-                button("2km/hr", 830, 320, 180, 140, green, grey, speed2)
-                button("3km/hr", 830, 470, 180, 140, green, grey, speed3)
-                button("4km/hr", 830, 620, 180, 140, green, grey, speed4)
-                button("5km/hr", 830, 770, 180, 140, green, grey, speed5)
-                button("6km/hr", 830, 920, 180, 140, green, grey, speed6)
-                button("7km/hr", 830, 1070, 180, 140, green, grey, speed7)
-                button("MAX", 830, 1220, 180, 140, green, grey, speedMax)
+                button("Remote", 830, 20, 180, 140, green, grey, setSpeed(0))
+                button("SLOW", 830, 170, 180, 140, green, grey, setSpeed(1000))
+                button("2km/hr", 830, 320, 180, 140, green, grey, setSpeed(1202))
+                button("3km/hr", 830, 470, 180, 140, green, grey, setSpeed(1283))
+                button("4km/hr", 830, 620, 180, 140, green, grey, setSpeed(1358))
+                button("5km/hr", 830, 770, 180, 140, green, grey, setSpeed(1489))
+                button("6km/hr", 830, 920, 180, 140, green, grey, setSpeed(1570))
+                button("7km/hr", 830, 1070, 180, 140, green, grey, setSpeed(1704))
+                button("MAX", 830, 1220, 180, 140, green, grey, setSpeed(2000))
 
             window.fill(white)
             ##BUTTONS
@@ -431,15 +404,15 @@ def startUnloading():
                 button("Move Left", 20, 280, 380, 380, greyblue, grey, moveLeft)
                 button("Move Right", 440, 280, 380, 380, greyblue, grey, moveRight)
                 button("Controlled Stop", 20, 20, 800, 200, yellow, grey, controlledStop)
-                button("Remote", 830, 20, 180, 140, green, grey, speedReturn)
-                button("SLOW", 830, 170, 180, 140, green, grey, speedSlow)
-                button("2km/hr", 830, 320, 180, 140, green, grey, speed2)
-                button("3km/hr", 830, 470, 180, 140, green, grey, speed3)
-                button("4km/hr", 830, 620, 180, 140, green, grey, speed4)
-                button("5km/hr", 830, 770, 180, 140, green, grey, speed5)
-                button("6km/hr", 830, 920, 180, 140, green, grey, speed6)
-                button("7km/hr", 830, 1070, 180, 140, green, grey, speed7)
-                button("MAX", 830, 1220, 180, 140, green, grey, speedMax)
+                button("Remote", 830, 20, 180, 140, green, grey, setSpeed(0))
+                button("SLOW", 830, 170, 180, 140, green, grey, setSpeed(1000))
+                button("2km/hr", 830, 320, 180, 140, green, grey, setSpeed(1202))
+                button("3km/hr", 830, 470, 180, 140, green, grey, setSpeed(1283))
+                button("4km/hr", 830, 620, 180, 140, green, grey, setSpeed(1358))
+                button("5km/hr", 830, 770, 180, 140, green, grey, setSpeed(1489))
+                button("6km/hr", 830, 920, 180, 140, green, grey, setSpeed(1570))
+                button("7km/hr", 830, 1070, 180, 140, green, grey, setSpeed(1704))
+                button("MAX", 830, 1220, 180, 140, green, grey, setSpeed(2000))
                 if turnSet == True:
                     button("Empty", 20, 720, 380, 380, lightblue, grey, empty)
                     if approach[0] != 0:
@@ -481,15 +454,15 @@ def ApproachLoc():
                 button("Set Here", 20, 280, 380, 380, greyblue, greyblue, setApproachLoc)
                 button("Cancel", 440, 280, 380, 380, greyblue, red, homeScreen)
                 button("Controlled Stop", 20, 20, 800, 200, yellow, grey, controlledStop)
-                button("Remote", 830, 20, 180, 140, green, grey, speedReturn)
-                button("SLOW", 830, 170, 180, 140, green, grey, speedSlow)
+                button("Remote", 830, 20, 180, 140, green, grey, setSpeed(0))
+                button("SLOW", 830, 170, 180, 140, green, grey, setSpeed(1000))
                 # button("Auto",830,320,180,140,green,grey,auto)
-                button("3km/hr", 830, 470, 180, 140, green, grey, speed3)
-                button("4km/hr", 830, 620, 180, 140, green, grey, speed4)
-                button("5km/hr", 830, 770, 180, 140, green, grey, speed5)
-                button("6km/hr", 830, 920, 180, 140, green, grey, speed6)
-                button("7km/hr", 830, 1070, 180, 140, green, grey, speed7)
-                button("MAX", 830, 1220, 180, 140, green, grey, speedMax)
+                button("3km/hr", 830, 470, 180, 140, green, grey, setSpeed(1283))
+                button("4km/hr", 830, 620, 180, 140, green, grey, setSpeed(1358))
+                button("5km/hr", 830, 770, 180, 140, green, grey, setSpeed(1489))
+                button("6km/hr", 830, 920, 180, 140, green, grey, setSpeed(1570))
+                button("7km/hr", 830, 1070, 180, 140, green, grey, setSpeed(1704))
+                button("MAX", 830, 1220, 180, 140, green, grey, setSpeed(2000))
             window.fill(white)
             # buttons
             button("QUICK STOP", 20, 1150, 800, 200, red, grey)
@@ -525,7 +498,7 @@ def goingToApproach():
                 distToApproach = distBwPoints(approach[0], approach[1], cartLoc.lat, cartLoc.lon)
                 print "Distance to approach is ", distToApproach, "m \n"
                 if 30 > distToApproach:
-                    speed4()
+                    setSpeed(1358)
                 if 10 > distToApproach:
                     print "Approach is being reached, stopping now! \n"
                     controlledStop()
@@ -534,15 +507,15 @@ def goingToApproach():
                 button("Go", 20, 280, 380, 380, greyblue, greyblue, goToApproach)
                 button("Cancel", 440, 280, 380, 380, greyblue, red, homeScreen)
                 button("Controlled Stop", 20, 20, 800, 200, yellow, grey, controlledStop)
-                button("Remote", 830, 20, 180, 140, green, grey, speedReturn)
-                button("SLOW", 830, 170, 180, 140, green, grey, speedSlow)
+                button("Remote", 830, 20, 180, 140, green, grey, setSpeed(0))
+                button("SLOW", 830, 170, 180, 140, green, grey, setSpeed(1000))
                 # button("Auto",830,320,180,140,green,grey,auto)
-                button("3km/hr", 830, 470, 180, 140, green, grey, speed3)
-                button("4km/hr", 830, 620, 180, 140, green, grey, speed4)
-                button("5km/hr", 830, 770, 180, 140, green, grey, speed5)
-                button("6km/hr", 830, 920, 180, 140, green, grey, speed6)
-                button("7km/hr", 830, 1070, 180, 140, green, grey, speed7)
-                button("MAX", 830, 1220, 180, 140, green, grey, speedMax)
+                button("3km/hr", 830, 470, 180, 140, green, grey, setSpeed(1283))
+                button("4km/hr", 830, 620, 180, 140, green, grey, setSpeed(1358))
+                button("5km/hr", 830, 770, 180, 140, green, grey, setSpeed(1489))
+                button("6km/hr", 830, 920, 180, 140, green, grey, setSpeed(1570))
+                button("7km/hr", 830, 1070, 180, 140, green, grey, setSpeed(1704))
+                button("MAX", 830, 1220, 180, 140, green, grey, setSpeed(2000))
             window.fill(white)
             # buttons
             button("QUICK STOP", 20, 1150, 800, 200, red, grey)
@@ -589,7 +562,7 @@ def empty():
                 distToReady = distBwPoints(loc[0], loc[1], cartLoc.lat, cartLoc.lon)
                 print "Distance to Ready location is ", distToReady, "m \n"
                 if 30 > distToReady:
-                    speed4()
+                    setSpeed(1358)
                 if 10 > distToReady:
                     print "Ready location is being reached, stopping now! \n"
                     controlledStop()
@@ -598,15 +571,15 @@ def empty():
                 # ~ button("Go",20,280,380,380,greyblue,greyblue,goToApproach)
                 # ~ button("Cancel",440,280,380,380,greyblue,red,homeScreen)
                 button("Controlled Stop", 20, 20, 800, 200, yellow, grey, controlledStop)
-                button("Remote", 830, 20, 180, 140, green, grey, speedReturn)
-                button("SLOW", 830, 170, 180, 140, green, grey, speedSlow)
+                button("Remote", 830, 20, 180, 140, green, grey, setSpeed(0))
+                button("SLOW", 830, 170, 180, 140, green, grey, setSpeed(1000))
                 # button("Auto",830,320,180,140,green,grey,auto)
-                button("3km/hr", 830, 470, 180, 140, green, grey, speed3)
-                button("4km/hr", 830, 620, 180, 140, green, grey, speed4)
-                button("5km/hr", 830, 770, 180, 140, green, grey, speed5)
-                button("6km/hr", 830, 920, 180, 140, green, grey, speed6)
-                button("7km/hr", 830, 1070, 180, 140, green, grey, speed7)
-                button("MAX", 830, 1220, 180, 140, green, grey, speedMax)
+                button("3km/hr", 830, 470, 180, 140, green, grey, setSpeed(1283))
+                button("4km/hr", 830, 620, 180, 140, green, grey, setSpeed(1358))
+                button("5km/hr", 830, 770, 180, 140, green, grey, setSpeed(1489))
+                button("6km/hr", 830, 920, 180, 140, green, grey, setSpeed(1570))
+                button("7km/hr", 830, 1070, 180, 140, green, grey, setSpeed(1704))
+                button("MAX", 830, 1220, 180, 140, green, grey, setSpeed(2000))
             window.fill(white)
             # buttons
             button("QUICK STOP", 20, 1150, 800, 200, red, grey)
@@ -670,15 +643,15 @@ def guideRight():
                 button("Move Left", 20, 280, 380, 380, greyblue, grey, moveLeft)
                 button("Move Right", 440, 280, 380, 380, greyblue, grey, moveRight)
                 button("Controlled Stop", 20, 20, 800, 200, yellow, grey, controlledStop)
-                button("Remote", 830, 20, 180, 140, green, grey, speedReturn)
-                button("SLOW", 830, 170, 180, 140, green, grey, speedSlow)
-                button("2km/hr", 830, 320, 180, 140, green, grey, speed2)
-                button("3km/hr", 830, 470, 180, 140, green, grey, speed3)
-                button("4km/hr", 830, 620, 180, 140, green, grey, speed4)
-                button("5km/hr", 830, 770, 180, 140, green, grey, speed5)
-                button("6km/hr", 830, 920, 180, 140, green, grey, speed6)
-                button("7km/hr", 830, 1070, 180, 140, green, grey, speed7)
-                button("MAX", 830, 1220, 180, 140, green, grey, speedMax)
+                button("Remote", 830, 20, 180, 140, green, grey, setSpeed(0))
+                button("SLOW", 830, 170, 180, 140, green, grey, setSpeed(1000))
+                button("2km/hr", 830, 320, 180, 140, green, grey, setSpeed(1202))
+                button("3km/hr", 830, 470, 180, 140, green, grey, setSpeed(1283))
+                button("4km/hr", 830, 620, 180, 140, green, grey, setSpeed(1358))
+                button("5km/hr", 830, 770, 180, 140, green, grey, setSpeed(1489))
+                button("6km/hr", 830, 920, 180, 140, green, grey, setSpeed(1570))
+                button("7km/hr", 830, 1070, 180, 140, green, grey, setSpeed(1704))
+                button("MAX", 830, 1220, 180, 140, green, grey, setSpeed(2000))
                 if approach[0] != 0:
                     button("Go To Approach", 440, 720, 380, 380, green, grey, goToApproachFromUnload)
             window.fill(white)
