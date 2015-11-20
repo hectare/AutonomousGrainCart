@@ -11,7 +11,7 @@ from droneapi.lib import VehicleMode, Location
 import threading
 
 pygame.init()
-window = pygame.display.set_mode((1030, 1400))
+window = pygame.display.set_mode((0,0), pygame.RESIZABLE)
 pygame.display.set_caption("Grain Cart Control")
 clock = pygame.time.Clock()
 
