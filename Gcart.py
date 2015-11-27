@@ -204,15 +204,15 @@ def getGpsLoc():
 # this function was used to turn guided mode on so map could be used. It is no longer
 # necessary because I have given up on the idea of using the map as it is hard and
 # imprecise in a moving vehicle.
-def setGuided():
-    # ~ combineLoc=getGpsLoc()
-    # ~ cartLoc=v.location
-    # ~ print "combine location is", combineLoc
-    # ~ print "cart location is",v.location
-    while v.mode.name != "GUIDED":
-        v.mode = VehicleMode("GUIDED")
-        v.flush()
-        time.sleep(1)
+# def setGuided():
+#     # ~ combineLoc=getGpsLoc()
+#     # ~ cartLoc=v.location
+#     # ~ print "combine location is", combineLoc
+#     # ~ print "cart location is",v.location
+#     while v.mode.name != "GUIDED":
+#         v.mode = VehicleMode("GUIDED")
+#         v.flush()
+#         time.sleep(1)
 
 
 approach = [0, 0, 0, 0]
@@ -229,7 +229,6 @@ def setApproachLoc():
 
 def goToApproach():
     global approach
-    setGuided()
     cartLoc = Location(approach[0], approach[1], altitude, is_relative=True)
     cmds.goto(cartLoc)
     v.flush()
